@@ -8,7 +8,8 @@ pygame = "*"
 numpy = "*"
 
 [dev-packages]
-yapf = "*"
+pylint = "*"
+pydocstyle = "*"
 
 [requires]
 python_version = "3.6"
