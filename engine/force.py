@@ -6,9 +6,9 @@ Todo:
 """
 
 
-from numpy import zeros, array
+from numpy import zeros, array, ndarray
 from numpy.linalg import norm
-from conf import AIR
+from engine.corpse import Corpse
 
 class Force():
     """A Force is a constraint on a Corpse.
@@ -19,7 +19,7 @@ class Force():
     """
 
     @staticmethod
-    def null_force_field(target: 'Corpse') -> 'ndarray':
+    def null_force_field(target: Corpse) -> ndarray:
         """Define a default null action force field function.
 
         Args:
@@ -38,11 +38,10 @@ class ForceField(Force):
     Note:
         Use only when source is not included in the system.
 
-    Args:
-        field (function): Function of target returning acceleration
-
     Attributes:
         field (function): Function of target returning acceleration
+
+    Methods:
 
     """
 
@@ -52,5 +51,5 @@ class ForceField(Force):
 
 FIELDS = {
     'WEIGHT': ForceField(lambda target: target.mass * array([0, 0, -9.81])),
-    'AIR_FRICTION': ForceField(lambda target: - 1/2 * target.environment.density * target.drag_coef * target.cross_sectional_area * norm(target.speed) * target.speed)
+    'AIR_FRICTION': ForceField(lambda target: - 1/2 * target.environment.density * target.drag_coef * target.cross_section_area * norm(target.speed) * target.speed)
 }
