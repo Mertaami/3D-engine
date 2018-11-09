@@ -4,6 +4,8 @@ Todo:
 
 """
 
+from conf import AIR, WATER
+
 class Environment():
     """Define an environment, which is a part of the system space.
 
@@ -26,6 +28,6 @@ class Environment():
         return "{name} (d={density})".format(name=self.name, density=self.density)
 
 ENVIRONMENTS = {
-    "air": Environment("air", lambda corpse: corpse.position[2] > 0.0, density=1.225),
-    "water": Environment("water", lambda corpse: corpse.position[2] <= 0.0 and corpse.position[2] > -10.0, density=997),
+    "air": Environment("air", lambda corpse: corpse.position[2] > 0.0, density=AIR['density']),
+    "water": Environment("water", lambda corpse: corpse.position[2] <= 0.0, density=WATER['density']),
 }
