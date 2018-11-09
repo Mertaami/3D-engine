@@ -4,8 +4,8 @@ Todo:
     Environment property raise error when multiple environments exist.
 """
 
-from numpy import zeros, ndarray
 from typing import List
+from numpy import zeros, ndarray
 from conf import TIME_STEP, ACTIVATED_FIELDS
 from engine.force import FIELDS
 from engine.environment import Environment, ENVIRONMENTS
@@ -25,6 +25,7 @@ class Corpse():
         environments: List of environments names the corpse move in
         acceleration: 3D array computed from fields [m/s²]
         environnement: Actual environment containing the corpse
+
     Methods:
 
     """
