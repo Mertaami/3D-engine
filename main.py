@@ -1,3 +1,5 @@
+"""Main script file"""
+
 from numpy import array, arange
 import matplotlib.pyplot as plt
 from engine.engine import Engine
@@ -15,7 +17,6 @@ for t in time:
     engine.compute_step(TIME_STEP, 'euler')
     x1.append(corpse1.position[0])
     z1.append(corpse1.position[2])
-    print(z1[-1])
 
 plt.plot(x1, z1)
 plt.legend(["friction"])
