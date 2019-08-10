@@ -8,7 +8,7 @@ Todo:
 
 from numpy import zeros, array, ndarray
 from numpy.linalg import norm
-from engine.corpse import Corpse
+# from engine.corpse import Corpse
 
 class Force():
     """A Force is a constraint on a Corpse.
@@ -19,7 +19,7 @@ class Force():
     """
 
     @staticmethod
-    def null_force_field(target: Corpse) -> ndarray:
+    def null_force_field(target: 'Corpse') -> ndarray:
         """Define a default null action force field function.
 
         Args:

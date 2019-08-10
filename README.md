@@ -17,4 +17,5 @@ This project uses the following Python modules:
 * `csv`: Write and read CSV files for data storage.
 * `unitest`: Unit tests.
 * `numpy`: NumPy: array processing for numbers, strings, records, and objects.
+* `scipy`: SciPy: Scientific Library for Python.
 * `Pygame`: Python Game Development.

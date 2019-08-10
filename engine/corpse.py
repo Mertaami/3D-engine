@@ -1,14 +1,19 @@
 """Manage all kind of corpses.
 
-Todo:
+TODO:
     Environment property raise error when multiple environments exist.
 """
 
-from typing import List
-from numpy import zeros, ndarray
+from typing import List, Tuple
+from numpy import zeros, ndarray, array
+from scipy.integrate import tplquad, quad
 from conf import TIME_STEP, ACTIVATED_FIELDS
+from utils import init
 from engine.force import FIELDS
 from engine.environment import Environment, ENVIRONMENTS
+
+# TODO
+inf = 10
 
 class Corpse():
     """A Corpse just being in a system.
@@ -17,7 +22,7 @@ class Corpse():
 
     Attributes:
         mass: Mass [kg]
-        position: 3D array [m]
+        gravity_center: 3D array [m]
         speed: 3D array [m/s]
         drag_coef: Used in friction []
         cross_section_area: Used in friction [m²]
@@ -27,18 +32,25 @@ class Corpse():
         environnement: Actual environment containing the corpse
 
     Methods:
-
+        move_step: Move the corpse of a step, using specified method
+        density: Density repartition in space [kg/m-3]
     """
 
     # ATTRIBUTES
     mass: float = 0
-    position: ndarray = zeros(3)
     speed: ndarray = zeros(3)
     drag_coef: float = 1
     cross_section_area: float = 0.01
 
     fields: List[str] = ACTIVATED_FIELDS
     environments: List[str] = ENVIRONMENTS
+
+    @property
+    def gravity_center(self) -> Tuple[float, float, float]:
+        gx = 1 / self.mass * tplquad(lambda x, y, z: x * self.density(x, y, z), -inf, inf, -inf, inf, -inf, inf)[0]
+        gy = 1 / self.mass * tplquad(lambda x, y, z: y * self.density(x, y, z), -inf, inf, -inf, inf, -inf, inf)[0]
+        gz = 1 / self.mass * tplquad(lambda x, y, z: z * self.density(x, y, z), -inf, inf, -inf, inf, -inf, inf)[0]
+        return array([gx, gy, gz])
 
     @property
     def acceleration(self) -> ndarray:
@@ -62,14 +74,18 @@ class Corpse():
 
     # METHODS
     def __init__(self, **kwargs):
-        for attr, value in kwargs.items():
-            if hasattr(self, attr):
-                setattr(self, attr, value)
+        init(self, **kwargs)
+        print(self.density(0.5, 0.5, 0.5))
+        self.mass = tplquad(self.density, -inf, inf, -inf, inf, -inf, inf)[0]
+        print(self.mass)
 
-
-
-
-
+    def __str__(self):
+        return ("Corpse:\n"
+                f"\tmass: {self.mass} kg\n"
+                f"\tDrag coefficient: {self.drag_coef}\n"
+                f"\tCross section area: {self.cross_section_area} m²\n"
+                f"\tPosition (gravity center): {self.gravity_center}"
+                )
 
     def move_step(self, time_step: float = TIME_STEP, method: str = 'euler'):
         """Compute and move the corpse during the time_setp, based on its acceleration.
@@ -89,3 +105,8 @@ class Corpse():
             speed = self.speed
             self.speed = self.speed + self.acceleration * time_step
             self.position = self.position + 1/2 * (self.speed + speed) * time_step
+
+    def density(self, x: float, y: float, z: float) -> float:
+        """Default"""
+        return int((0<x<1) and (0<y<1) and (0<z<1))
+
